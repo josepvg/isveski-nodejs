@@ -1,0 +1,11 @@
+.gitignore
+.openapi-generator-ignore
+api.ts
+api/apis.ts
+api/serverEndpointApi.ts
+git_push.sh
+model/beaconParameter.ts
+model/beaconResult.ts
+model/models.ts
+model/requestParameter.ts
+model/requestTicket.ts

@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34601.278
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "IsveskiDemo_NodeJS", "IsveskiDemo_NodeJS\IsveskiDemo_NodeJS.njsproj", "{917C864C-2848-40E4-9E47-8A2166611865}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{917C864C-2848-40E4-9E47-8A2166611865}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{917C864C-2848-40E4-9E47-8A2166611865}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{917C864C-2848-40E4-9E47-8A2166611865}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{917C864C-2848-40E4-9E47-8A2166611865}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9160DD4F-987C-4382-8268-C68414DB036E}
+	EndGlobalSection
+EndGlobal

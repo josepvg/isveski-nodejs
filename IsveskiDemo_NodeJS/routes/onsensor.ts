@@ -6,13 +6,13 @@ import express = require('express');
 import localVarRequest from 'request';
 import { Authentication, ClientDeviceInterfaceApi, ShowMenuDto, ShowMessageDto } from '../clientcode/api';
 import { RequestParameter } from '../servercode/api';
+import Dict = NodeJS.Dict;
 const router = express.Router();
 
 export class IsveskiApiKeyAuth implements Authentication {
     applyToRequest(requestOptions: localVarRequest.Options): void | Promise<void> {
         requestOptions.headers['x-api-key'] = "APIKEY";
     }
-
 }
 
 router.post('/', async (req: express.Request, res: express.Response) => {

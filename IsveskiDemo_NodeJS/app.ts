@@ -2,17 +2,19 @@
 import { AddressInfo } from "net";
 import * as path from 'path';
 
+import { log } from './utils';
 import routes from './routes/index';
-import users from './routes/user';
-import onsensor from './routes/onsensor';
+import user from './routes/user';
+import onsensor, {IsveskiApiKeyAuth} from './routes/onsensor';
 import detailticket from './routes/detailticket';
+import detailcookie from "./routes/detailcookie";
 import linkticket from './routes/linkticket';
 
 import { NextFunction, Request, Response } from 'express';
 import express = require("express");
-
-const loggers: Array<Function> = [console.log, require('debug')('my express app')]
-const log = (message:string) => loggers.map(x => x(message))
+import noTicketEndpointFor from "./routes/noticket";
+import makeNoTicketEndpointFor from "./routes/noticket";
+import {ClientWalletApi} from "./clientcode/api/clientWalletApi";
 
 const app = express();
 app.use(express.json());
@@ -38,7 +40,30 @@ app.set('view engine', 'pug');
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-app.use('/users', users);
+app.use('/user', user);
+
+
+const clientApi = new ClientWalletApi("https://isveski.is");
+clientApi.setDefaultAuthentication(new IsveskiApiKeyAuth());
+
+[
+    detailcookie, 
+    makeNoTicketEndpointFor(
+        {"is": "Gymkort", "en": "Gymcard"}, 
+        {"is": "Þú þarft kort til að komast inn", "en": "You need a card to get in"},
+        20000
+    )
+].map(endpoint => app.use('/salur', endpoint));
+
+[
+    detailcookie, 
+    makeNoTicketEndpointFor(
+        {"is": "Miði í lúxus róðravél", "en": "Deluxe Rowing Machine Ticket"}, 
+        {"is": "Maður þarf sérstakann miða í þessa vél!", "en": "You need a special ticket for this machine"},
+       2000 
+    )
+].map(endpoint => app.use('/deluxerowingmachine', endpoint))
+
 app.use('/onsensor', checkApiKey, onsensor);
 
 app.use('/detailticket', detailticket);

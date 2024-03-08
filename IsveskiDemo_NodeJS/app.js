@@ -27,14 +27,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const path = __importStar(require("path"));
+const utils_1 = require("./utils");
 const index_1 = __importDefault(require("./routes/index"));
 const user_1 = __importDefault(require("./routes/user"));
-const onsensor_1 = __importDefault(require("./routes/onsensor"));
+const onsensor_1 = __importStar(require("./routes/onsensor"));
 const detailticket_1 = __importDefault(require("./routes/detailticket"));
+const detailcookie_1 = __importDefault(require("./routes/detailcookie"));
 const linkticket_1 = __importDefault(require("./routes/linkticket"));
 const express = require("express");
-const loggers = [console.log, require('debug')('my express app')];
-const log = (message) => loggers.map(x => x(message));
+const noticket_1 = __importDefault(require("./routes/noticket"));
+const clientWalletApi_1 = require("./clientcode/api/clientWalletApi");
 const app = express();
 app.use(express.json());
 // Define middleware to check API key
@@ -55,7 +57,17 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index_1.default);
-app.use('/users', user_1.default);
+app.use('/user', user_1.default);
+const clientApi = new clientWalletApi_1.ClientWalletApi("https://isveski.is");
+clientApi.setDefaultAuthentication(new onsensor_1.IsveskiApiKeyAuth());
+[
+    detailcookie_1.default,
+    (0, noticket_1.default)({ "is": "Gymkort", "en": "Gymcard" }, { "is": "Þú þarft kort til að komast inn", "en": "You need a card to get in" }, 20000)
+].map(endpoint => app.use('/salur', endpoint));
+[
+    detailcookie_1.default,
+    (0, noticket_1.default)({ "is": "Miði í lúxus róðravél", "en": "Deluxe Rowing Machine Ticket" }, { "is": "Maður þarf sérstakann miða í þessa vél!", "en": "You need a special ticket for this machine" }, 2000)
+].map(endpoint => app.use('/deluxerowingmachine', endpoint));
 app.use('/onsensor', checkApiKey, onsensor_1.default);
 app.use('/detailticket', detailticket_1.default);
 app.use('/linkticket', linkticket_1.default);
@@ -88,6 +100,6 @@ app.use((err, req, res, next) => {
 });
 app.set('port', process.env.PORT || 3000);
 const server = app.listen(app.get('port'), function () {
-    log(`Express server listening on port ${server.address().port}`);
+    (0, utils_1.log)(`Express server listening on port ${server.address().port}`);
 });
 //# sourceMappingURL=app.js.map

@@ -6,7 +6,8 @@
     "build": "tsc --build",
     "clean": "tsc --build --clean",
     "start": "node app",
-    "develop": "tsc && concurrently 'tsc -w' 'node --watch app'"
+    "develop": "tsc && concurrently 'tsc -w' 'node --watch app'",
+	"generate-isveski-clients": "openapi-generator-cli generate --help"
   },
   "description": "IsveskiDemo_NodeJS",
   "author": {
@@ -21,6 +22,7 @@
     "request": "^2.88.2"
   },
   "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.11.0",
     "@types/debug": "0.0.30",
     "@types/express": "^4.0.37",
     "@types/express-serve-static-core": "^4.0.50",

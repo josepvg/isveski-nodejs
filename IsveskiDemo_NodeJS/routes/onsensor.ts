@@ -11,7 +11,7 @@ const router = express.Router();
 
 export class IsveskiApiKeyAuth implements Authentication {
     applyToRequest(requestOptions: localVarRequest.Options): void | Promise<void> {
-        requestOptions.headers['x-api-key'] = "APIKEY";
+        requestOptions.headers['x-api-key'] = "IS-UPIIXxEY1Xsh1of-brTf4F3BhXThYABnK";
     }
 }
 

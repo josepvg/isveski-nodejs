@@ -1,0 +1,9 @@
+extends layout
+
+block content
+  h1 No account
+  p You do not have an account with us, please sign up to a service to get an account.
+  div
+      form(action=#{getTicketEndpoint}, method='POST')
+          p Press the button to #{buttonActionText}!
+          input(type='submit', value="I'm in")

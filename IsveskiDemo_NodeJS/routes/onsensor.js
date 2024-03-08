@@ -18,7 +18,7 @@ const api_1 = require("../clientcode/api");
 const router = express.Router();
 class IsveskiApiKeyAuth {
     applyToRequest(requestOptions) {
-        requestOptions.headers['x-api-key'] = "APIKEY";
+        requestOptions.headers['x-api-key'] = "IS-UPIIXxEY1Xsh1of-brTf4F3BhXThYABnK";
     }
 }
 exports.IsveskiApiKeyAuth = IsveskiApiKeyAuth;

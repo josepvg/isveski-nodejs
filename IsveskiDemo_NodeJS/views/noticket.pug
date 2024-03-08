@@ -1,0 +1,9 @@
+extends layout
+
+block content
+  h1 #{title}
+  p #{explanation} 
+  div
+      form(action=getTicketEndpoint, method='POST')
+          p Press the button to get it!
+          input(type='submit', value="I'm in")

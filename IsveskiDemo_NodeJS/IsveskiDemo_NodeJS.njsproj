@@ -30,6 +30,10 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="routes\finishticket.js" />
+    <Content Include="views\complete.pug" />
+    <Content Include="views\linkticket.pug" />
+    <Content Include="views\noapp.pug" />
     <None Include="app.ts" />
     <None Include="routes\index.ts" />
     <None Include="routes\user.ts" />

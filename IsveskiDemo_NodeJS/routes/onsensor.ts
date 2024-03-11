@@ -10,9 +10,8 @@ const router = express.Router();
 
 export class IsveskiApiKeyAuth implements Authentication {
     applyToRequest(requestOptions: localVarRequest.Options): void | Promise<void> {
-        requestOptions.headers['x-api-key'] = "APIKEY";
+        requestOptions.headers['x-api-key'] = "IS-D4KGiEIHEmOFQZhOFqaywjnmU4WL6mpxQ";
     }
-
 }
 
 router.post('/', async (req: express.Request, res: express.Response) => {
@@ -21,6 +20,10 @@ router.post('/', async (req: express.Request, res: express.Response) => {
         const clientApi = new ClientDeviceInterfaceApi("https://isveski.is");
         clientApi.setDefaultAuthentication(new IsveskiApiKeyAuth());
 
+
+        const data = requestBody.tickets[0].data;
+        const dataStructure = JSON.parse(data);
+        const userId = dataStructure.userId;
 
         const icelandicUser = requestBody.language === 'is';
 

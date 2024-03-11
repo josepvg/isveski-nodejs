@@ -7,20 +7,23 @@ import users from './routes/user';
 import onsensor from './routes/onsensor';
 import detailticket from './routes/detailticket';
 import linkticket from './routes/linkticket';
+import finishticket from './routes/finishticket';
 
+import cookieParser from 'cookie-parser';
 import { NextFunction, Request, Response } from 'express';
 import express = require("express");
 
 const debug = require('debug')('my express app');
 const app = express();
 app.use(express.json());
+app.use(cookieParser());
 
 // Define middleware to check API key
 const checkApiKey = (req: Request, res: Response, next: NextFunction) => {
     // Replace 'your_api_key_here' with your actual API key value
     console.log(req.headers);
     const apiKey = req.get('x-api-key');
-    if (apiKey && apiKey === 'SIGNALKEY') {
+    if (apiKey && apiKey === 'IS-pV5ZfTNU4hhJz_9j39MBCXRpsvlP4Mtky') {
         next(); // API Key is correct, proceed to the next middleware or request handler
     } else {
         // API Key is incorrect or not provided, return 401 Unauthorized
@@ -42,6 +45,7 @@ app.use('/onsensor', checkApiKey, onsensor);
 app.use('/detailticket', detailticket);
 
 app.use('/linkticket', linkticket);
+app.use('/finishticket', finishticket);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

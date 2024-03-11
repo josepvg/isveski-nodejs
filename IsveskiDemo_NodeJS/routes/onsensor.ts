@@ -6,6 +6,7 @@ import express = require('express');
 import localVarRequest from 'request';
 import { Authentication, ClientDeviceInterfaceApi, ShowMenuDto, ShowMessageDto } from '../clientcode/api';
 import { RequestParameter } from '../servercode/api';
+import Dict = NodeJS.Dict;
 const router = express.Router();
 
 export class IsveskiApiKeyAuth implements Authentication {

@@ -5,7 +5,8 @@
   "scripts": {
     "build": "tsc --build",
     "clean": "tsc --build --clean",
-    "start": "node app"
+    "start": "node app",
+    "develop": "tsc && concurrently 'tsc -w' 'node --watch app'"
   },
   "description": "IsveskiDemo_NodeJS",
   "author": {
@@ -29,6 +30,7 @@
     "@types/serve-static": "^1.7.32",
     "@typescript-eslint/eslint-plugin": "^5.33.0",
     "@typescript-eslint/parser": "^5.33.0",
+    "concurrently": "^8.2.2",
     "eslint": "^8.21.0",
     "typescript": "^4.5.2"
   },

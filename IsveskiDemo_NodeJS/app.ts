@@ -13,7 +13,9 @@ import cookieParser from 'cookie-parser';
 import { NextFunction, Request, Response } from 'express';
 import express = require("express");
 
-const debug = require('debug')('my express app');
+const loggers: Array<Function> = [console.log, require('debug')('my express app')]
+const log = (message:string) => loggers.map(x => x(message))
+
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
@@ -81,6 +83,6 @@ app.use((err, req, res, next) => { // eslint-disable-line @typescript-eslint/no-
 app.set('port', process.env.PORT || 3000);
 
 const server = app.listen(app.get('port'), function () {
-    debug(`Express server listening on port ${(server.address() as AddressInfo).port}`);
+    log(`Express server listening on port ${(server.address() as AddressInfo).port}`);
 });
 

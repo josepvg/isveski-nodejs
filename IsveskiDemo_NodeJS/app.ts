@@ -25,7 +25,7 @@ const checkApiKey = (req: Request, res: Response, next: NextFunction) => {
     // Replace 'your_api_key_here' with your actual API key value
     console.log(req.headers);
     const apiKey = req.get('x-api-key');
-    if (apiKey && apiKey === 'IS-pV5ZfTNU4hhJz_9j39MBCXRpsvlP4Mtky') {
+    if (apiKey && apiKey === 'SIGNALAPIKEY') {
         next(); // API Key is correct, proceed to the next middleware or request handler
     } else {
         // API Key is incorrect or not provided, return 401 Unauthorized

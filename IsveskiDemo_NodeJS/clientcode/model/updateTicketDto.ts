@@ -15,12 +15,12 @@ import { DetailTemplate } from './detailTemplate';
 import { Template } from './template';
 
 export class UpdateTicketDto {
-    'ticketId'?: string;
-    'name'?: string | null;
-    'data'?: string | null;
-    'template'?: Template;
-    'detailTemplate'?: DetailTemplate;
-    'note'?: string | null;
+    'ticketId': string;
+    'name': string;
+    'data': string;
+    'template': Template;
+    'detailTemplate': DetailTemplate;
+    'note': string;
 
     static discriminator: string | undefined = undefined;
 

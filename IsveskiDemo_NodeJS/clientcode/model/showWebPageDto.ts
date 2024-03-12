@@ -11,28 +11,39 @@
  */
 
 import { RequestFile } from './models';
-import { LogTemplate } from './logTemplate';
 
-export class CreateTicketLogDto {
-    'ticketId': string;
-    'logTemplate': LogTemplate;
+export class ShowWebPageDto {
+    'communicationId': string;
+    'loadingText': string;
+    'url': string;
+    'timeoutSek': number;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "ticketId",
-            "baseName": "ticketId",
+            "name": "communicationId",
+            "baseName": "communicationId",
             "type": "string"
         },
         {
-            "name": "logTemplate",
-            "baseName": "logTemplate",
-            "type": "LogTemplate"
+            "name": "loadingText",
+            "baseName": "loadingText",
+            "type": "string"
+        },
+        {
+            "name": "url",
+            "baseName": "url",
+            "type": "string"
+        },
+        {
+            "name": "timeoutSek",
+            "baseName": "timeoutSek",
+            "type": "number"
         }    ];
 
     static getAttributeTypeMap() {
-        return CreateTicketLogDto.attributeTypeMap;
+        return ShowWebPageDto.attributeTypeMap;
     }
 }
 

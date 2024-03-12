@@ -11,28 +11,31 @@
  */
 
 import { RequestFile } from './models';
-import { LogTemplate } from './logTemplate';
+import { DetailTemplate } from './detailTemplate';
+import { DetailTemplateTypeEnum } from './detailTemplateTypeEnum';
 
-export class CreateTicketLogDto {
-    'ticketId': string;
-    'logTemplate': LogTemplate;
+export class WebPageDetailTemplate extends DetailTemplate {
+    'loadingText'?: string | null;
+    'url'?: string | null;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "ticketId",
-            "baseName": "ticketId",
+            "name": "loadingText",
+            "baseName": "loadingText",
             "type": "string"
         },
         {
-            "name": "logTemplate",
-            "baseName": "logTemplate",
-            "type": "LogTemplate"
+            "name": "url",
+            "baseName": "url",
+            "type": "string"
         }    ];
 
     static getAttributeTypeMap() {
-        return CreateTicketLogDto.attributeTypeMap;
+        return super.getAttributeTypeMap().concat(WebPageDetailTemplate.attributeTypeMap);
     }
 }
 
+export namespace WebPageDetailTemplate {
+}

@@ -26,5 +26,6 @@ export enum ActionTypesEnum {
     ShowQrCode = <any> 'ShowQrCode',
     BioAuthenticate = <any> 'BioAuthenticate',
     ListenToBeacons = <any> 'ListenToBeacons',
-    NoTicket = <any> 'NoTicket'
+    NoTicket = <any> 'NoTicket',
+    ShowWebPage = <any> 'ShowWebPage'
 }

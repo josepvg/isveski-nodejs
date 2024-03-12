@@ -1,5 +1,4 @@
 .gitignore
-.openapi-generator-ignore
 api.ts
 api/apis.ts
 api/clientDeviceInterfaceApi.ts
@@ -53,6 +52,8 @@ model/showPromptResult.ts
 model/showQrCodeDto.ts
 model/showTicketAction.ts
 model/showUrlAction.ts
+model/showWebPageDto.ts
+model/showWebPageResult.ts
 model/statusDetail.ts
 model/template.ts
 model/template1.ts
@@ -67,3 +68,4 @@ model/verifyCredentialsResult.ts
 model/verifyCredentialsUserIdResult.ts
 model/verifyDto.ts
 model/verifyUserIdDto.ts
+model/webPageDetailTemplate.ts

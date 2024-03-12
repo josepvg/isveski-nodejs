@@ -43,6 +43,8 @@ export * from './showPromptResult';
 export * from './showQrCodeDto';
 export * from './showTicketAction';
 export * from './showUrlAction';
+export * from './showWebPageDto';
+export * from './showWebPageResult';
 export * from './statusDetail';
 export * from './template';
 export * from './template1';
@@ -57,6 +59,7 @@ export * from './verifyCredentialsResult';
 export * from './verifyCredentialsUserIdResult';
 export * from './verifyDto';
 export * from './verifyUserIdDto';
+export * from './webPageDetailTemplate';
 
 import * as fs from 'fs';
 
@@ -114,6 +117,8 @@ import { ShowPromptResult } from './showPromptResult';
 import { ShowQrCodeDto } from './showQrCodeDto';
 import { ShowTicketAction } from './showTicketAction';
 import { ShowUrlAction } from './showUrlAction';
+import { ShowWebPageDto } from './showWebPageDto';
+import { ShowWebPageResult } from './showWebPageResult';
 import { StatusDetail } from './statusDetail';
 import { Template } from './template';
 import { Template1 } from './template1';
@@ -128,6 +133,7 @@ import { VerifyCredentialsResult } from './verifyCredentialsResult';
 import { VerifyCredentialsUserIdResult } from './verifyCredentialsUserIdResult';
 import { VerifyDto } from './verifyDto';
 import { VerifyUserIdDto } from './verifyUserIdDto';
+import { WebPageDetailTemplate } from './webPageDetailTemplate';
 
 /* tslint:disable:no-unused-variable */
 let primitives = [
@@ -191,6 +197,8 @@ let typeMap: {[index: string]: any} = {
     "ShowQrCodeDto": ShowQrCodeDto,
     "ShowTicketAction": ShowTicketAction,
     "ShowUrlAction": ShowUrlAction,
+    "ShowWebPageDto": ShowWebPageDto,
+    "ShowWebPageResult": ShowWebPageResult,
     "Template": Template,
     "Template1": Template1,
     "TemplateButton": TemplateButton,
@@ -202,6 +210,7 @@ let typeMap: {[index: string]: any} = {
     "VerifyCredentialsUserIdResult": VerifyCredentialsUserIdResult,
     "VerifyDto": VerifyDto,
     "VerifyUserIdDto": VerifyUserIdDto,
+    "WebPageDetailTemplate": WebPageDetailTemplate,
 }
 
 export class ObjectSerializer {

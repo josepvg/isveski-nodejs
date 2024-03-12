@@ -286,7 +286,7 @@
   <ItemGroup>
     <Script Include="repository.ts" />
     <Script Include="routes\detailcookie.ts" />
-    <Script Include="routes\salur\onsensor.ts" />
+    <Script Include="routes\salur\gymcard.ts" />
     <Script Include="utils.ts" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />

@@ -13,8 +13,8 @@
 import { RequestFile } from './models';
 
 export class DeleteTicketDto {
-    'ticketId'?: string;
-    'note'?: string | null;
+    'ticketId': string;
+    'note': string;
 
     static discriminator: string | undefined = undefined;
 

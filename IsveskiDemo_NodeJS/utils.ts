@@ -33,13 +33,10 @@ const parseIsveskiCookie = (cookie: string) : IsveskiRedirectCookie | null => {
     }
 }
 
-const getIsveskiUsername = async (username: string): Promise<string> => {
-    const clientApi = new ClientWalletApi("https://isveski.is");
-    clientApi.setDefaultAuthentication(new IsveskiApiKeyAuth());
-    const idGetResponse = await clientApi.apiClientWalletSearchUserGet(username);
+const getIsveskiUserId = async (api: ClientWalletApi, username: string): Promise<string> => {
+    const idGetResponse = await api.apiClientWalletSearchUserGet(username);
     if(idGetResponse.response.statusCode !== 200) {
-        const respAsString = JSON.stringify(idGetResponse.response);
-        throw new Error(`Couldn't get info for user ${user.name} from Isveski server. Abort \n ${respAsString}`);
+        throw new Error(`Couldn't get info for user ${user.name} from Isveski server.`);
     }
     return idGetResponse.body;
 }
@@ -58,4 +55,4 @@ const getIsveskiTicketDefinitionIds = async (): Promise<Dict<string>> => {
         {});
 }
 
-export { log, getIsveskiCookieAsString, parseIsveskiCookie, getIsveskiTicketDefinitionIds, getIsveskiUsername }
+export { log, getIsveskiCookieAsString, parseIsveskiCookie, getIsveskiTicketDefinitionIds, getIsveskiUserId }

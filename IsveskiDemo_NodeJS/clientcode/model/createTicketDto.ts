@@ -15,13 +15,13 @@ import { DetailTemplate } from './detailTemplate';
 import { Template } from './template';
 
 export class CreateTicketDto {
-    'userId'?: string;
-    'name'?: string | null;
-    'ticketDefinitionId'?: string;
-    'data'?: string | null;
-    'detailTemplate'?: DetailTemplate;
-    'template'?: Template;
-    'note'?: string | null;
+    'userId': string;
+    'name': string;
+    'ticketDefinitionId': string;
+    'data': string;
+    'detailTemplate': DetailTemplate;
+    'template': Template;
+    'note': string;
 
     static discriminator: string | undefined = undefined;
 

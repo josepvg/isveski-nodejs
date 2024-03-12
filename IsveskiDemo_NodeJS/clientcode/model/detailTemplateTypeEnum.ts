@@ -13,5 +13,6 @@
 import { RequestFile } from './models';
 
 export enum DetailTemplateTypeEnum {
-    Dt1 = <any> 'DT1'
+    Dt1 = <any> 'DT1',
+    WebPageDetailTemplate = <any> 'WebPageDetailTemplate'
 }

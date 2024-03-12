@@ -30,6 +30,10 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="routes\finishticket.js" />
+    <Content Include="views\complete.pug" />
+    <Content Include="views\linkticket.pug" />
+    <Content Include="views\noapp.pug" />
     <Content Include="routes\noticket.ts" />
     <Content Include="views\invalidstate.pug" />
     <Content Include="views\noaccount.pug" />
@@ -184,7 +188,6 @@
     <Content Include="package.json" />
     <Content Include="public\stylesheets\main.css" />
     <Content Include="README.md" />
-    <Content Include="views\detailcookie.pug" />
     <Content Include="views\detailticket.pug" />
     <Content Include="views\index.pug" />
     <Content Include="views\layout.pug" />
@@ -199,10 +202,12 @@
     <Folder Include="public\images\" />
     <Folder Include="public\javascripts\" />
     <Folder Include="public\stylesheets\" />
+    <Folder Include="routes\" />
     <Folder Include="servercode\" />
     <Folder Include="servercode\.openapi-generator\" />
     <Folder Include="servercode\api\" />
     <Folder Include="servercode\model\" />
+    <Folder Include="views\" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="clientcode\api.ts" />
@@ -282,12 +287,6 @@
     <TypeScriptCompile Include="servercode\model\models.ts" />
     <TypeScriptCompile Include="servercode\model\requestParameter.ts" />
     <TypeScriptCompile Include="servercode\model\requestTicket.ts" />
-  </ItemGroup>
-  <ItemGroup>
-    <Script Include="repository.ts" />
-    <Script Include="routes\detailcookie.ts" />
-    <Script Include="routes\salur\gymcard.ts" />
-    <Script Include="utils.ts" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
   <ProjectExtensions>

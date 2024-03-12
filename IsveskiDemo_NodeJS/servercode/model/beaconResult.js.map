@@ -1,1 +1,0 @@
-{"version":3,"file":"beaconResult.js","sourceRoot":"","sources":["beaconResult.ts"],"names":[],"mappings":";AAAA;;;;;;;;;;GAUG;;;AAIH,MAAa,YAAY;IAYrB,MAAM,CAAC,mBAAmB;QACtB,OAAO,YAAY,CAAC,gBAAgB,CAAC;IACzC,CAAC;;AAdL,oCAeC;AAZU,0BAAa,GAAuB,SAAS,CAAC;AAE9C,6BAAgB,GAA0D;IAC7E;QACI,MAAM,EAAE,WAAW;QACnB,UAAU,EAAE,UAAU;QACtB,MAAM,EAAE,SAAS;KACpB;CAAK,CAAC"}

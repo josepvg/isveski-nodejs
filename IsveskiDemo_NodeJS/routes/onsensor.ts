@@ -22,6 +22,10 @@ router.post('/', async (req: express.Request, res: express.Response) => {
         clientApi.setDefaultAuthentication(new IsveskiApiKeyAuth());
 
 
+        const data = requestBody.tickets[0].data;
+        const dataStructure = JSON.parse(data);
+        const userId = dataStructure.userId;
+
         const icelandicUser = requestBody.language === 'is';
 
         const showMenuDto = new ShowMenuDto();

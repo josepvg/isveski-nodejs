@@ -1,0 +1,32 @@
+﻿//- extends layout
+
+//- block content
+//-   h1= title
+//-   p Viltu fá #{userName} miða í ísveski #{isveskiUserName}
+
+doctype html
+html
+  head
+    title=title
+    script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js")
+  body
+    h1 Velkomin #{userName}
+    button#myButton(type="button" style="font-size: 20px; padding: 10px 20px;") Setja miða í ísveski #{isveskiUserName}
+    script.
+      $(document).ready(function() {
+        $('#myButton').click(function() {
+            var url = '/finishTicket?userName=' + encodeURIComponent("#{userName}") + '&isveskiUserName=' + encodeURIComponent("#{isveskiUserName}");
+          $.ajax({
+            url: url,
+            type: 'GET',
+            success: function(response) {
+                $('#myButton').hide(); // Hide the button
+              // Handle response or redirect
+              $('body').html(response); // This will replace the body with the response, adjust as needed
+            },
+            error: function(xhr, status, error) {
+              console.error("Error: " + status + " " + error);
+            }
+          });
+        });
+      });

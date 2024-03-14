@@ -30,6 +30,8 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="common\repository.js" />
+    <Content Include="common\repository.js.map" />
     <Content Include="routes\finishticket.js" />
     <Content Include="views\complete.pug" />
     <Content Include="views\linkticket.pug" />
@@ -287,6 +289,10 @@
     <TypeScriptCompile Include="servercode\model\models.ts" />
     <TypeScriptCompile Include="servercode\model\requestParameter.ts" />
     <TypeScriptCompile Include="servercode\model\requestTicket.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <Script Include="common\repository.ts" />
+    <Script Include="common\isveskiUtils.ts" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
   <ProjectExtensions>

@@ -1,6 +1,6 @@
 /* GET users listing. */
 import express = require('express');
-import { log, parseIsveskiCookie } from '../utils' 
+import { log, parseIsveskiCookie } from '../common/isveskiUtils' 
 const router = express.Router();
 
 router.get('/detailticket', (req: express.Request, res: express.Response) => {

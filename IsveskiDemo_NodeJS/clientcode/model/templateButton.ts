@@ -11,11 +11,11 @@
  */
 
 import { RequestFile } from './models';
-import { BaseAction } from './baseAction';
+import { TemplateButtonAction } from './templateButtonAction';
 
 export class TemplateButton {
     'text'?: string | null;
-    'action'?: BaseAction;
+    'action'?: TemplateButtonAction | null;
 
     static discriminator: string | undefined = undefined;
 
@@ -28,7 +28,7 @@ export class TemplateButton {
         {
             "name": "action",
             "baseName": "action",
-            "type": "BaseAction"
+            "type": "TemplateButtonAction"
         }    ];
 
     static getAttributeTypeMap() {

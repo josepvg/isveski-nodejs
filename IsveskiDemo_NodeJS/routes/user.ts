@@ -2,8 +2,8 @@
  * GET users listing.
  */
 import express = require('express');
-import {parseIsveskiCookie} from "../utils";
-import {getUserIfExists} from "../repository";
+import {parseIsveskiCookie} from "../common/isveskiUtils";
+import {Users} from "../common/repository";
 
 const router = express.Router();
 
@@ -13,7 +13,7 @@ router.get('/', (req: express.Request, res: express.Response) => {
         res.render('invalidstate', {message: "Cookie missing"})
     }
     else {
-        const user = getUserIfExists(cookie.UserName)
+        const user = Users.getUserIfExists(cookie.UserName)
         if(user)
             res.render('user', { 
                 username: user.name,

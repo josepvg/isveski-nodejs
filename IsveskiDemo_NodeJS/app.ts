@@ -2,7 +2,7 @@
 import { AddressInfo } from "net";
 import * as path from 'path';
 
-import { log } from './utils';
+import { log } from './common/isveskiUtils';
 import routes from './routes/index';
 import user from './routes/user';
 import onsensor, {IsveskiApiKeyAuth} from './routes/onsensor';
@@ -16,6 +16,7 @@ import { NextFunction, Request, Response } from 'express';
 import express = require("express");
 import noTicketEndpointFor from "./routes/noticket";
 import makeNoTicketEndpointFor from "./routes/noticket";
+import addGymcardEndpoints from "./routes/salur/gymcard";
 import {ClientWalletApi} from "./clientcode/api/clientWalletApi";
 
 const app = express();
@@ -51,11 +52,7 @@ clientApi.setDefaultAuthentication(new IsveskiApiKeyAuth());
 
 [
     detailcookie, 
-    makeNoTicketEndpointFor(
-        {"is": "Gymkort", "en": "Gymcard"}, 
-        {"is": "Þú þarft kort til að komast inn", "en": "You need a card to get in"},
-        20000
-    )
+    addGymcardEndpoints()
 ].map(endpoint => app.use('/salur', endpoint));
 
 [

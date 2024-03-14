@@ -18,8 +18,13 @@ model/choice.ts
 model/clientTicketAction.ts
 model/clientWallet.ts
 model/clientWalletTicket.ts
+model/clientWalletTicketDetailTemplate.ts
+model/clientWalletTicketTemplate.ts
 model/createTicketDto.ts
+model/createTicketDtoDetailTemplate.ts
+model/createTicketDtoTemplate.ts
 model/createTicketLogDto.ts
+model/createTicketLogDtoLogTemplate.ts
 model/deleteTicketDto.ts
 model/detailTemplate.ts
 model/detailTemplate1.ts
@@ -38,6 +43,7 @@ model/refreshTicketAction.ts
 model/refreshTicketListAction.ts
 model/returnChoice.ts
 model/sendToTicketDto.ts
+model/sendToTicketDtoActionsInner.ts
 model/sensor.ts
 model/sensorAction.ts
 model/sensorType.ts
@@ -58,6 +64,7 @@ model/statusDetail.ts
 model/template.ts
 model/template1.ts
 model/templateButton.ts
+model/templateButtonAction.ts
 model/templateTypeEnum.ts
 model/ticketAccess.ts
 model/ticketActive.ts

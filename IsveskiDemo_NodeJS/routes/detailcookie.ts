@@ -1,6 +1,6 @@
 /* GET users listing. */
 import express = require('express');
-import { log, getIsveskiCookieAsString, parseIsveskiCookie } from '../utils' 
+import { log, getIsveskiCookieAsString, parseIsveskiCookie } from '../common/isveskiUtils' 
 const router = express.Router();
 
 router.get('/detailcookie', (req: express.Request, res: express.Response) => {

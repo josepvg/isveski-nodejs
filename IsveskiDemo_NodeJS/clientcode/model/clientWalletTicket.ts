@@ -11,8 +11,8 @@
  */
 
 import { RequestFile } from './models';
-import { DetailTemplate } from './detailTemplate';
-import { Template } from './template';
+import { ClientWalletTicketDetailTemplate } from './clientWalletTicketDetailTemplate';
+import { ClientWalletTicketTemplate } from './clientWalletTicketTemplate';
 import { TicketAccess } from './ticketAccess';
 
 export class ClientWalletTicket {
@@ -20,8 +20,8 @@ export class ClientWalletTicket {
     'ticketDefinitionId'?: string;
     'name'?: string | null;
     'data'?: string | null;
-    'template'?: Template;
-    'detailTemplate'?: DetailTemplate;
+    'template'?: ClientWalletTicketTemplate | null;
+    'detailTemplate'?: ClientWalletTicketDetailTemplate | null;
     'pushNotifications'?: TicketAccess;
     'beacons'?: TicketAccess;
     'locations'?: TicketAccess;
@@ -52,12 +52,12 @@ export class ClientWalletTicket {
         {
             "name": "template",
             "baseName": "template",
-            "type": "Template"
+            "type": "ClientWalletTicketTemplate"
         },
         {
             "name": "detailTemplate",
             "baseName": "detailTemplate",
-            "type": "DetailTemplate"
+            "type": "ClientWalletTicketDetailTemplate"
         },
         {
             "name": "pushNotifications",

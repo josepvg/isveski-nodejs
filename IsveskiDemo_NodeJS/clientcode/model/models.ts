@@ -10,8 +10,13 @@ export * from './choice';
 export * from './clientTicketAction';
 export * from './clientWallet';
 export * from './clientWalletTicket';
+export * from './clientWalletTicketDetailTemplate';
+export * from './clientWalletTicketTemplate';
 export * from './createTicketDto';
+export * from './createTicketDtoDetailTemplate';
+export * from './createTicketDtoTemplate';
 export * from './createTicketLogDto';
+export * from './createTicketLogDtoLogTemplate';
 export * from './deleteTicketDto';
 export * from './detailTemplate';
 export * from './detailTemplate1';
@@ -29,6 +34,7 @@ export * from './refreshTicketAction';
 export * from './refreshTicketListAction';
 export * from './returnChoice';
 export * from './sendToTicketDto';
+export * from './sendToTicketDtoActionsInner';
 export * from './sensor';
 export * from './sensorAction';
 export * from './sensorType';
@@ -49,6 +55,7 @@ export * from './statusDetail';
 export * from './template';
 export * from './template1';
 export * from './templateButton';
+export * from './templateButtonAction';
 export * from './templateTypeEnum';
 export * from './ticketAccess';
 export * from './ticketActive';
@@ -84,8 +91,13 @@ import { Choice } from './choice';
 import { ClientTicketAction } from './clientTicketAction';
 import { ClientWallet } from './clientWallet';
 import { ClientWalletTicket } from './clientWalletTicket';
+import { ClientWalletTicketDetailTemplate } from './clientWalletTicketDetailTemplate';
+import { ClientWalletTicketTemplate } from './clientWalletTicketTemplate';
 import { CreateTicketDto } from './createTicketDto';
+import { CreateTicketDtoDetailTemplate } from './createTicketDtoDetailTemplate';
+import { CreateTicketDtoTemplate } from './createTicketDtoTemplate';
 import { CreateTicketLogDto } from './createTicketLogDto';
+import { CreateTicketLogDtoLogTemplate } from './createTicketLogDtoLogTemplate';
 import { DeleteTicketDto } from './deleteTicketDto';
 import { DetailTemplate } from './detailTemplate';
 import { DetailTemplate1 } from './detailTemplate1';
@@ -103,6 +115,7 @@ import { RefreshTicketAction } from './refreshTicketAction';
 import { RefreshTicketListAction } from './refreshTicketListAction';
 import { ReturnChoice } from './returnChoice';
 import { SendToTicketDto } from './sendToTicketDto';
+import { SendToTicketDtoActionsInner } from './sendToTicketDtoActionsInner';
 import { Sensor } from './sensor';
 import { SensorAction } from './sensorAction';
 import { SensorType } from './sensorType';
@@ -123,6 +136,7 @@ import { StatusDetail } from './statusDetail';
 import { Template } from './template';
 import { Template1 } from './template1';
 import { TemplateButton } from './templateButton';
+import { TemplateButtonAction } from './templateButtonAction';
 import { TemplateTypeEnum } from './templateTypeEnum';
 import { TicketAccess } from './ticketAccess';
 import { TicketActive } from './ticketActive';
@@ -168,8 +182,13 @@ let typeMap: {[index: string]: any} = {
     "ClientTicketAction": ClientTicketAction,
     "ClientWallet": ClientWallet,
     "ClientWalletTicket": ClientWalletTicket,
+    "ClientWalletTicketDetailTemplate": ClientWalletTicketDetailTemplate,
+    "ClientWalletTicketTemplate": ClientWalletTicketTemplate,
     "CreateTicketDto": CreateTicketDto,
+    "CreateTicketDtoDetailTemplate": CreateTicketDtoDetailTemplate,
+    "CreateTicketDtoTemplate": CreateTicketDtoTemplate,
     "CreateTicketLogDto": CreateTicketLogDto,
+    "CreateTicketLogDtoLogTemplate": CreateTicketLogDtoLogTemplate,
     "DeleteTicketDto": DeleteTicketDto,
     "DetailTemplate": DetailTemplate,
     "DetailTemplate1": DetailTemplate1,
@@ -184,6 +203,7 @@ let typeMap: {[index: string]: any} = {
     "RefreshTicketListAction": RefreshTicketListAction,
     "ReturnChoice": ReturnChoice,
     "SendToTicketDto": SendToTicketDto,
+    "SendToTicketDtoActionsInner": SendToTicketDtoActionsInner,
     "Sensor": Sensor,
     "SensorAction": SensorAction,
     "SensorsConfigurationResponse": SensorsConfigurationResponse,
@@ -202,6 +222,7 @@ let typeMap: {[index: string]: any} = {
     "Template": Template,
     "Template1": Template1,
     "TemplateButton": TemplateButton,
+    "TemplateButtonAction": TemplateButtonAction,
     "TicketActive": TicketActive,
     "TicketConfigurationResponse": TicketConfigurationResponse,
     "TicketDefinition": TicketDefinition,

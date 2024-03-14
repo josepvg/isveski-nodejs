@@ -1,14 +1,17 @@
 /* GET users listing. */
 import express = require('express');
 import Dict = NodeJS.Dict;
-import {getIsveskiTicketDefinitionIds, getIsveskiUsername, log, parseIsveskiCookie} from '../utils'
-import {addUserIfMissing} from '../repository'
+import {getIsveskiTicketDefinitionIds, getIsveskiUserId, log, parseIsveskiCookie} from '../common/isveskiUtils'
+import {Users} from '../common/repository'
 import {ClientWalletApi} from "../clientcode/api/clientWalletApi";
 import {IsveskiApiKeyAuth} from "./onsensor";
 import {CreateTicketDto} from "../clientcode/model/createTicketDto";
 import {TemplateTypeEnum} from "../clientcode/model/templateTypeEnum";
 import {Template1} from "../clientcode/model/template1";
 import {Template} from "../clientcode/model/template";
+import {DetailTemplate} from "../clientcode/model/detailTemplate";
+import {DetailTemplate1} from "../clientcode/model/detailTemplate1";
+import {DetailTemplateTypeEnum} from "../clientcode/model/detailTemplateTypeEnum";
 
 const router = express.Router();
 
@@ -34,20 +37,27 @@ function makeNoTicketEndpoint(ticketname: Dict<string>, explanation: Dict<string
             res.render('invalidstate', {message: `Isveski cookie missing (${req.url})`});
             return;
         }
-        const user = addUserIfMissing(cookie.UserName);
+        const user = Users.addUserIfMissing(cookie.UserName);
         user.balance -= price;
-        
-        const userId = await getIsveskiUsername(user.name);
-        const ticketDefs =  await getIsveskiTicketDefinitionIds();
         
         const clientApi = new ClientWalletApi("https://isveski.is");
         clientApi.setDefaultAuthentication(new IsveskiApiKeyAuth());
+        
+        const userId = await getIsveskiUserId(clientApi, user.name);
+        const ticketDefs =  await getIsveskiTicketDefinitionIds();
         
         const template: Template1 = {
             description: "", 
             expiry: undefined, 
             image: "", 
             templateType: undefined, 
+            time: undefined, title: ""
+        }
+        const detailTemplate: DetailTemplate1 = {
+            description: "", 
+            expiry: undefined, 
+            image: "", 
+            detailType: DetailTemplateTypeEnum.Dt1, 
             time: undefined, title: ""
         }
         const ticketcreationDto: CreateTicketDto = {
@@ -57,6 +67,9 @@ function makeNoTicketEndpoint(ticketname: Dict<string>, explanation: Dict<string
             template: {
                 templateType: TemplateTypeEnum.T1
             },
+            data: "",
+            detailTemplate: detailTemplate,
+            note: ''
         }
         log(JSON.stringify(ticketcreationDto, null, 2))
         

@@ -11,11 +11,11 @@
  */
 
 import { RequestFile } from './models';
-import { LogTemplate } from './logTemplate';
+import { CreateTicketLogDtoLogTemplate } from './createTicketLogDtoLogTemplate';
 
 export class CreateTicketLogDto {
     'ticketId': string;
-    'logTemplate': LogTemplate;
+    'logTemplate': CreateTicketLogDtoLogTemplate;
 
     static discriminator: string | undefined = undefined;
 
@@ -28,7 +28,7 @@ export class CreateTicketLogDto {
         {
             "name": "logTemplate",
             "baseName": "logTemplate",
-            "type": "LogTemplate"
+            "type": "CreateTicketLogDtoLogTemplate"
         }    ];
 
     static getAttributeTypeMap() {

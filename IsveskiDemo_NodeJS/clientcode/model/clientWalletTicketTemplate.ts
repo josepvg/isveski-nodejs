@@ -11,22 +11,24 @@
  */
 
 import { RequestFile } from './models';
-import { SendToTicketDtoActionsInner } from './sendToTicketDtoActionsInner';
+import { Template } from './template';
+import { Template1 } from './template1';
+import { TemplateTypeEnum } from './templateTypeEnum';
 
-export class SendToTicketDto {
-    'ticketId': string;
-    'title': string;
-    'body': string;
-    'actions': Array<SendToTicketDtoActionsInner>;
+export class ClientWalletTicketTemplate {
     'image'?: string | null;
-    'priority': number;
+    'title'?: string | null;
+    'description'?: string | null;
+    'time'?: Date | null;
+    'expiry'?: Date | null;
+    'templateType': TemplateTypeEnum;
 
     static discriminator: string | undefined = undefined;
 
     static attributeTypeMap: Array<{name: string, baseName: string, type: string}> = [
         {
-            "name": "ticketId",
-            "baseName": "ticketId",
+            "name": "image",
+            "baseName": "image",
             "type": "string"
         },
         {
@@ -35,28 +37,30 @@ export class SendToTicketDto {
             "type": "string"
         },
         {
-            "name": "body",
-            "baseName": "body",
+            "name": "description",
+            "baseName": "description",
             "type": "string"
         },
         {
-            "name": "actions",
-            "baseName": "actions",
-            "type": "Array<SendToTicketDtoActionsInner>"
+            "name": "time",
+            "baseName": "time",
+            "type": "Date"
         },
         {
-            "name": "image",
-            "baseName": "image",
-            "type": "string"
+            "name": "expiry",
+            "baseName": "expiry",
+            "type": "Date"
         },
         {
-            "name": "priority",
-            "baseName": "priority",
-            "type": "number"
+            "name": "templateType",
+            "baseName": "templateType",
+            "type": "TemplateTypeEnum"
         }    ];
 
     static getAttributeTypeMap() {
-        return SendToTicketDto.attributeTypeMap;
+        return ClientWalletTicketTemplate.attributeTypeMap;
     }
 }
 
+export namespace ClientWalletTicketTemplate {
+}

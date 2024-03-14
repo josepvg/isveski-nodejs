@@ -11,16 +11,16 @@
  */
 
 import { RequestFile } from './models';
-import { DetailTemplate } from './detailTemplate';
-import { Template } from './template';
+import { CreateTicketDtoDetailTemplate } from './createTicketDtoDetailTemplate';
+import { CreateTicketDtoTemplate } from './createTicketDtoTemplate';
 
 export class CreateTicketDto {
     'userId': string;
     'name': string;
     'ticketDefinitionId': string;
     'data': string;
-    'detailTemplate': DetailTemplate;
-    'template': Template;
+    'detailTemplate': CreateTicketDtoDetailTemplate;
+    'template': CreateTicketDtoTemplate;
     'note': string;
 
     static discriminator: string | undefined = undefined;
@@ -49,12 +49,12 @@ export class CreateTicketDto {
         {
             "name": "detailTemplate",
             "baseName": "detailTemplate",
-            "type": "DetailTemplate"
+            "type": "CreateTicketDtoDetailTemplate"
         },
         {
             "name": "template",
             "baseName": "template",
-            "type": "Template"
+            "type": "CreateTicketDtoTemplate"
         },
         {
             "name": "note",

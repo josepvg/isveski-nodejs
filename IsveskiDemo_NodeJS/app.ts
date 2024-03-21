@@ -14,10 +14,9 @@ import finishticket from './routes/finishticket';
 import cookieParser from 'cookie-parser';
 import { NextFunction, Request, Response } from 'express';
 import express = require("express");
-import noTicketEndpointFor from "./routes/noticket";
 import makeNoTicketEndpointFor from "./routes/noticket";
-import addGymcardEndpoints from "./routes/salur/gymcard";
-import {ClientWalletApi} from "./clientcode/api/clientWalletApi";
+import {makeGymCardHolderSignalEndpoint, ticketType as gymcardTicketType} from "./routes/salur/gymcard";
+import users from "./routes/users";
 
 const app = express();
 app.use(express.json());
@@ -46,23 +45,19 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', routes);
 app.use('/user', user);
 
+    
+    
+app.use('/salur', makeNoTicketEndpointFor(gymcardTicketType));
+app.use('/salur', makeGymCardHolderSignalEndpoint());
 
-const clientApi = new ClientWalletApi("https://isveski.is");
-clientApi.setDefaultAuthentication(new IsveskiApiKeyAuth());
-
-[
-    detailcookie, 
-    addGymcardEndpoints()
-].map(endpoint => app.use('/salur', endpoint));
-
-[
-    detailcookie, 
-    makeNoTicketEndpointFor(
-        {"is": "Miði í lúxus róðravél", "en": "Deluxe Rowing Machine Ticket"}, 
-        {"is": "Maður þarf sérstakann miða í þessa vél!", "en": "You need a special ticket for this machine"},
-       2000 
-    )
-].map(endpoint => app.use('/deluxerowingmachine', endpoint))
+// [
+//     detailcookie, 
+//     makeNoTicketEndpointFor(
+//         {"is": "Miði í lúxus róðravél", "en": "Deluxe Rowing Machine Ticket"}, 
+//         {"is": "Maður þarf sérstakann miða í þessa vél!", "en": "You need a special ticket for this machine"},
+//        2000 
+//     )
+// ].map(endpoint => app.use('/deluxerowingmachine', endpoint))
 
 app.use('/onsensor', checkApiKey, onsensor);
 
@@ -70,6 +65,8 @@ app.use('/detailticket', detailticket);
 
 app.use('/linkticket', linkticket);
 app.use('/finishticket', finishticket);
+
+app.use('/users', users);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

@@ -1,164 +1,163 @@
 /* GET users listing. */
 import express = require('express');
 import {
-    getText,
-    getDictionaryLookup,
-    TextWithTranslations,
-    getIsveskiTicketDefinitionIds,
-    getIsveskiUserId,
-    log,
-    parseIsveskiCookie,
-    IsveskiTicketType
-} from '../../common/isveskiUtils'
-import {Users} from '../../common/repository'
+    getApiClientForClientWallet,
+    getApiClientForPushNotifications,
+    getApiClientForUserDevice,
+    IsveskiTicketType,
+    log
+} from '../../common/isveskiUtils';
+import {Text} from '../../common/text';
 import {ClientWalletApi} from "../../clientcode/api/clientWalletApi";
 import {IsveskiApiKeyAuth} from "../onsensor";
-import {TemplateTypeEnum} from "../../clientcode/model/templateTypeEnum";
-import {Template} from "../../clientcode/model/template";
-import {DetailTemplateTypeEnum} from "../../clientcode/model/detailTemplateTypeEnum";
-import {DetailTemplate} from "../../clientcode/model/detailTemplate";
 import {RequestParameter} from "../../servercode/model/requestParameter";
-import {response} from "express";
 import {ClientDeviceInterfaceApi} from "../../clientcode/api/clientDeviceInterfaceApi";
-import {CreateTicketDto} from "../../clientcode/model/createTicketDto";
+import { Users } from '../../common/repository';
+import {PushNotificationsApi} from "../../clientcode/api/pushNotificationsApi";
+import {ActionTypesEnum} from "../../clientcode/model/actionTypesEnum";
+import {ShowUrlAction} from "../../clientcode/model/showUrlAction";
 
-const ticket: IsveskiTicketType = {
+export const ticketType: IsveskiTicketType = {
     systemName: "Gymcard",
-    name: {text: "Gymcard", translations:{ is: "Gymkort" }},
-    description: {text: "Access to the gym", translations: {is: "Aðgangur að ræktinni"}},
-    noTicketDeclaration: {text: "You have no gymcard", translations: {is: "Þú átt ekki kort"}},
-    needForTicketPitch: {
-        text: "With a gymcard you can access this wonderful gym, it's 20.000 kr.", 
-        translations: {is: "Með ræktarkorti máttu nota ræktina, kostar 20.000 kr."}
+    name: {text: "Gymkort", translations:{ en: "Gymcard" }},
+    description: {text: "Aðgangur að ræktinni", translations: {en: "Access to the gym"}},
+    noTicketDialogue: { 
+        noTicketDeclaration: {text: "Þú átt ekki kort", translations: {en: "You have no gymcard"}},
+        purchaseTicketPersuasion: {
+            text: "Með ræktarkorti máttu nota ræktina, kostar aðeins 20.000 kr.", 
+            translations: {en: "With a gymcard you can access this wonderful gym, it's only 20.000 kr."}
+        },
+        purchaseAction: {
+            text: "Kaupa miða", translations: {en: "Buy ticket"}
+        }
     },
     image: 'Gymlogo',
     price: 20000,
     expiryPeriodInDays: 30,
 }
 
-function addGymcardEndpoints() {
+const wattPrice = 10 + Math.ceil(Math.random()*10);
+
+const userFacingText: Text[] = [
+    {text: "Staðfesting á miðanotkun", translations: {"en": "Confirmation of ticket use"}},
+    {text: "Viltu nota miðann?", translations: {"en": "Do you want to use your ticket?"}},
+    {text: "Já", translations: {"en": "Yes"}},
+    {text: "Nei", translations: {"en": "No"}},
+    {text: "Miði notaður", translations: {"en": "Ticket spent"}},
+    {text: "Miði geymdur", translations: {"en": "Ticket kept"}},
+    {text: "Allt í góðu", translations: {"en": "Alright"}},
+    {text: "Þessi nemi er ekki tengdur neinni virkni, reyndu annan.", translations: {"en": "Sensor not connected to any activity"}},
+];
+    
+
+export function makeGymCardHolderSignalEndpoint() {
     
     const router = express.Router();
     
-    router.get('/noticket', (req: express.Request, res: express.Response) => {
-        const cookie = parseIsveskiCookie(req.headers?.cookie)
-        if (!cookie) {
-            res.render('invalidstate', {message: `Isveski cookie missing (${req.originalUrl})`});
-            return;
-        }
-        res.render('noticket', { 
-            title: getText(ticket.noTicketDeclaration, cookie.Language),
-            explanation: getText(ticket.needForTicketPitch, cookie.Language),
-            getTicketEndpoint: 'getticket' 
-        });
-    });
-    
-    router.post('/getticket',async (req, res) => {
-        const cookie = parseIsveskiCookie(req.headers?.cookie);
-        if (!cookie) {
-            res.render('invalidstate', {message: `Isveski cookie missing (${req.url})`});
-            return;
-        }
-        const user  = Users.addUserIfMissing(cookie.UserName);
-        user.balance -= ticket.price;
-        
-        const clientApi = new ClientWalletApi("https://isveski.is");
-        clientApi.setDefaultAuthentication(new IsveskiApiKeyAuth());
-        
-        const [userId, ticketDefs] =
-            await Promise.all([
-                getIsveskiUserId(clientApi, user.name),
-                getIsveskiTicketDefinitionIds()
-            ])
-
-        log(`Got IDs from Isveski system: ${userId} and ${ticketDefs[ticket.systemName]}`)
-
-        const ticketTypeId = ticketDefs[ticket.systemName];
-        if(!ticketTypeId) {
-            res.render('invalidstate', {message: `Ticket ${ticket.systemName} does not exist (yet?) on the Isveski system`});
-            return;
-        }
-        const createTicketRequest: CreateTicketDto = {
-            userId: userId,
-            name: ticket.systemName,
-            ticketDefinitionId: ticketTypeId,
-            template: {
-                title: getText(ticket.name, cookie.Language),
-                description: getText(ticket.description, cookie.Language),
-                expiry: new Date(Date.now() + 1000*60*60*24*ticket.expiryPeriodInDays),
-                time: new Date(),
-                image: ticket.image,
-                templateType: TemplateTypeEnum.T1,
-            } as Template,
-            detailTemplate: {
-                detailType: DetailTemplateTypeEnum.Dt1,
-                title: getText(ticket.name, cookie.Language),
-                description: getText(ticket.description, cookie.Language),
-                expiry: new Date(Date.now() + 1000*60*60*24*ticket.expiryPeriodInDays),
-                time: new Date(),
-                image: ticket.image,
-            } as DetailTemplate,
-            data: `Created on ${new Date()}`,
-            note: ""
-        };
-        log(JSON.stringify(createTicketRequest,null,2));
-        const { response: resp, body: body } = 
-            await clientApi.apiClientWalletCreateTicketPost(createTicketRequest);
-
-        log(`${resp.statusCode}: ${ body.slice(0,200)}`)
-        log(`Ticketsale! User ${cookie.UserName} (${userId}) got a ticket ${getText(ticket.name, cookie.Language)}, his balance is now ${user.balance}`);
-        res.redirect('/user');
-    })
-
-    const ticketUseDialogue: TextWithTranslations[] = [
-        {text: "Confirmation of ticket use", translations: {"is": "Staðfesting á miðanotkun"}},
-        {text: "Do you want to use your ticket?", translations: {"is": "Viltu nota miðann?"}},
-        {text: "Yes", translations: {"is": "Já"}},
-        {text: "No", translations: {"is": "Nei"}},
-        {text: "Ticket spent", translations: {"is": "Miði notaður"}},
-        {text: "Ticket kept", translations: {"is": "Miði geymdur"}},
-        {text: "Understood", translations: {"is": "Móttekið"}},
-    ];
-    
     router.post('/onsignal', async (req, res) =>{
         const requestParameter: RequestParameter = req.body;
-        const translate = getDictionaryLookup(requestParameter.language, ticketUseDialogue);
+        const translateIfNeeded = Text.getLookup(userFacingText, requestParameter.language);
         
-        const clientDeviceApi = new ClientDeviceInterfaceApi("https://isveski.is");
-        clientDeviceApi.setDefaultAuthentication(new IsveskiApiKeyAuth());
+        const user = Users.getOrAddUserIfMissing(requestParameter.userId);
+        
+        const clientDeviceApi = getApiClientForUserDevice();
+        
+        log(JSON.stringify(requestParameter, null, 2));
+        
+        if(requestParameter.sensorName.startsWith("Inngangur")) {
+            // Card holder is trying to get in
 
-        const options = [translate("Yes"), translate("No")],
-            [yesOption, noOption] = options;
-        const { body: choice } = await clientDeviceApi.apiClientDeviceInterfaceShowMenuPost({
+            const [yesOption, noOption] = [translateIfNeeded("Yes"), translateIfNeeded("No")];
+            const options = [yesOption, noOption];
+                
+            const { body: choice } = await clientDeviceApi.apiClientDeviceInterfaceShowMenuPost({
+                    communicationId: requestParameter.communicationId,
+                    title: translateIfNeeded('Staðfesting á miðanotkun'),
+                    message: translateIfNeeded("Viltu nota miðann?"),
+                    options: options,
+                    timeoutSek: 30
+                });
+     
+            const spendTicket = choice.selectedValue === yesOption;
+            if(spendTicket){
+                const walletApi = getApiClientForClientWallet();
+                const ticketDeletions = 
+                    requestParameter.tickets.map(ticket => 
+                        walletApi.apiClientWalletDeleteTicketPost({ticketId: ticket.id, note: "Ticket used"}))
+                await Promise.all(ticketDeletions);
+            }
+            
+            const ticketFateText = translateIfNeeded(spendTicket ? "Miði notaður": "Miði geymdur");
+            await clientDeviceApi.apiClientDeviceInterfaceShowMessagePost({
                 communicationId: requestParameter.communicationId,
-                title: translate('Confirmation of ticket use'),
-                message: translate("Do you want to use your ticket?"),
-                options: options,
-                timeoutSek: 30
+                title: ticketFateText,
+                message: ticketFateText,
+                timeoutSek: 10,
+                close: translateIfNeeded("Allt í góðu")
             });
-        
-        const spendTicket = choice.selectedValue === yesOption;
-        if(spendTicket){
-            const walletApi = new ClientWalletApi("https://isveski.is");
-            walletApi.setDefaultAuthentication(new IsveskiApiKeyAuth());
-            requestParameter.tickets.forEach(ticket => {
-                walletApi.apiClientWalletDeleteTicketPost({ticketId: ticket.id, note: "Ticket used"});
-            })
         }
-        
-        const ticketFateText = translate(spendTicket ? "Ticket spent": "Ticket kept");
-        clientDeviceApi.apiClientDeviceInterfaceShowMessagePost({
-            communicationId: requestParameter.communicationId,
-            title: ticketFateText,
-            message: ticketFateText,
-            timeoutSek: 10,
-            close: translate("Understood")
-        });
+        else if (requestParameter.sensorName.startsWith("Rafalsróðravél")){
+            
+            await clientDeviceApi.apiClientDeviceInterfaceShowMessagePost({
+                communicationId: requestParameter.communicationId,
+                title: translateIfNeeded("Velkomin/n í rafalsróður!"),
+                message: translateIfNeeded("Ertu til í að toga inn kílóvattstundirnar"),
+                timeoutSek: 10,
+                close: translateIfNeeded("Ójá!")
+            });
+            const yesOption = translateIfNeeded("Það er í fína");
+            const { body: choice } = await clientDeviceApi.apiClientDeviceInterfaceShowMenuPost({
+                communicationId: requestParameter.communicationId,
+                title: translateIfNeeded("Laun"),
+                message: translateIfNeeded(`Þú færð ${wattPrice} kr. á kílóvattstundina. Er það lagi?`),
+                timeoutSek: 30,
+                options: [yesOption, translateIfNeeded("Nei, það er of lítið")]
+            });
+            const goOn = choice.selectedValue === yesOption;
+            await clientDeviceApi.apiClientDeviceInterfaceShowMessagePost({
+                communicationId: requestParameter.communicationId,
+                title: translateIfNeeded("Jæja"),
+                message: goOn ? translateIfNeeded("Hefst þá róðurinn!") : translateIfNeeded("Sjáumst síðar"),
+                timeoutSek: 10,
+                close: goOn ? translateIfNeeded("Ókei!") : translateIfNeeded("Bless"),
+            });
+            if(goOn){
+                const sessionLengthInSeconds = 5 + Math.ceil(Math.random()*10);
+                setTimeout(sessionEnds, sessionLengthInSeconds * 1000);
+                function sessionEnds() {
+                    // clientDeviceApi.apiClientDeviceInterfacePushSensorPost({})
+                    const pay = (sessionLengthInSeconds/60)*wattPrice; // turn seconds into minutes for demo purposes
+                    user.balance = user.balance + pay;
+                    const pushApi = getApiClientForPushNotifications();
+                    pushApi.apiPushNotificationsSendToTicketPost({
+                        ticketId: requestParameter.tickets[0].id,
+                        title: translateIfNeeded("Róðri lokið"),
+                        body: translateIfNeeded("Þú rerir inn ") + `${pay} kr. á ${sessionLengthInSeconds} mínútum`,
+                        priority: 1,
+                        actions: [
+                            { actionType: ActionTypesEnum.ShowUrl, url: "https://isveski-abler.ossur.xyz/user"},
+                            { actionType: ActionTypesEnum.ShowTicket, ticketId: requestParameter.tickets[0].id}
+                        ]
+                    }).then( x => {
+                        const {body: svar} = x;
+                        log(`Rowing session ended, was ${sessionLengthInSeconds} s long`)
+                    }).catch(log)
+                }
+            }
+        }
+        else {
+            await clientDeviceApi.apiClientDeviceInterfaceShowMessagePost({
+                communicationId: requestParameter.communicationId,
+                title: translateIfNeeded("Sensor not connected to any activity"),
+                message: translateIfNeeded("Sensor not connected to any activity"),
+                timeoutSek: 10,
+                close: translateIfNeeded("Alright")
+            });
+        }
         
         res.sendStatus(200);
     });
     
+    
     return router;
 }
-
-export default addGymcardEndpoints 

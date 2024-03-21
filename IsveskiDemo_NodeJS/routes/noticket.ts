@@ -1,86 +1,96 @@
 /* GET users listing. */
 import express = require('express');
-import Dict = NodeJS.Dict;
-import {getIsveskiTicketDefinitionIds, getIsveskiUserId, log, parseIsveskiCookie} from '../common/isveskiUtils'
+import {
+    getApiClientForClientWallet,
+    getIsveskiTicketDefinitionIds,
+    getIsveskiUserId,
+    IsveskiTicketType,
+    log,
+    parseIsveskiCookie
+} from '../common/isveskiUtils'
 import {Users} from '../common/repository'
 import {ClientWalletApi} from "../clientcode/api/clientWalletApi";
 import {IsveskiApiKeyAuth} from "./onsensor";
 import {CreateTicketDto} from "../clientcode/model/createTicketDto";
 import {TemplateTypeEnum} from "../clientcode/model/templateTypeEnum";
-import {Template1} from "../clientcode/model/template1";
 import {Template} from "../clientcode/model/template";
 import {DetailTemplate} from "../clientcode/model/detailTemplate";
-import {DetailTemplate1} from "../clientcode/model/detailTemplate1";
 import {DetailTemplateTypeEnum} from "../clientcode/model/detailTemplateTypeEnum";
+import {Text} from "../common/text";
 
-const router = express.Router();
 
-function makeNoTicketEndpoint(ticketname: Dict<string>, explanation: Dict<string>, price) {
-    
+function makeNoTicketEndpoint(ticketType: IsveskiTicketType) {
 
+    const router = express.Router();
+
+    // Redirect to a generic ticket sale page 
     router.get('/noticket', (req: express.Request, res: express.Response) => {
         const cookie = parseIsveskiCookie(req.headers?.cookie)
         if (!cookie) {
             res.render('invalidstate', {message: `Isveski cookie missing (${req.originalUrl})`});
             return;
         }
+        const renderText = Text.getRenderer(cookie.Language)
         res.render('noticket', { 
-            title: ticketname[cookie.Language],
-            explanation: explanation[cookie.Language],
-            getTicketEndpoint: 'getticket' 
+            title: renderText(ticketType.noTicketDialogue.noTicketDeclaration),
+            explanation: renderText(ticketType.noTicketDialogue.purchaseTicketPersuasion),
+            buyTicketAction: renderText(ticketType.noTicketDialogue.purchaseAction),
+            getTicketEndpoint: 'getticket'
         });
     });
-
+    
+    // Endpoint for the ticket sale page
     router.post('/getticket',async (req, res) => {
         const cookie = parseIsveskiCookie(req.headers?.cookie);
         if (!cookie) {
             res.render('invalidstate', {message: `Isveski cookie missing (${req.url})`});
             return;
         }
-        const user = Users.addUserIfMissing(cookie.UserName);
-        user.balance -= price;
+        const renderText = Text.getRenderer(cookie.Language);
         
-        const clientApi = new ClientWalletApi("https://isveski.is");
-        clientApi.setDefaultAuthentication(new IsveskiApiKeyAuth());
+        const clientApi = getApiClientForClientWallet();
         
-        const userId = await getIsveskiUserId(clientApi, user.name);
-        const ticketDefs =  await getIsveskiTicketDefinitionIds();
+        const [userId, ticketDefs] =
+            await Promise.all([
+                getIsveskiUserId(cookie.UserName, clientApi),
+                getIsveskiTicketDefinitionIds()
+            ])
         
-        const template: Template1 = {
-            description: "", 
-            expiry: undefined, 
-            image: "", 
-            templateType: undefined, 
-            time: undefined, title: ""
-        }
-        const detailTemplate: DetailTemplate1 = {
-            description: "", 
-            expiry: undefined, 
-            image: "", 
-            detailType: DetailTemplateTypeEnum.Dt1, 
-            time: undefined, title: ""
-        }
-        const ticketcreationDto: CreateTicketDto = {
+        const user  = Users.getOrAddUserIfMissing(userId, cookie.UserName);
+
+        const ticketTypeId = ticketDefs[ticketType.systemName];
+        if(!ticketTypeId) throw new Error(`Ticket ${ticketType.systemName} does not exist (yet?) on the Isveski system`);
+        
+        const createTicketRequest: CreateTicketDto = {
             userId: userId,
-            name: "Abler-dev",
-            ticketDefinitionId: ticketDefs[ticketname["en"]],
+            name: ticketType.systemName,
+            ticketDefinitionId: ticketTypeId,
             template: {
-                templateType: TemplateTypeEnum.T1
-            },
-            data: "",
-            detailTemplate: detailTemplate,
-            note: ''
-        }
-        log(JSON.stringify(ticketcreationDto, null, 2))
+                title: renderText(ticketType.name),
+                description: renderText(ticketType.description),
+                expiry: new Date(Date.now() + 1000*60*60*24*ticketType.expiryPeriodInDays),
+                time: new Date(),
+                image: ticketType.image,
+                templateType: TemplateTypeEnum.T1,
+            } as Template,
+            detailTemplate: {
+                detailType: DetailTemplateTypeEnum.Dt1,
+                title: renderText(ticketType.name),
+                description: renderText(ticketType.description),
+                expiry: new Date(Date.now() + 1000*60*60*24*ticketType.expiryPeriodInDays),
+                time: new Date(),
+                image: ticketType.image,
+            } as DetailTemplate,
+            data: `Created on ${new Date()}`,
+            note: ""
+        };
         
-        const ticketCreateResp = await clientApi.apiClientWalletCreateTicketPost(
-            ticketcreationDto
-        );
+        await clientApi.apiClientWalletCreateTicketPost(createTicketRequest);
+
+        user.balance -= ticketType.price;
         
-        // log(JSON.stringify(ticketCreateResp, null, 2))
-        
-        log(`Ticketsale! User ${cookie.UserName} (${userId}) got a ticket ${ticketname["en"]}, his balance is now ${user.balance}`);
-        res.redirect('/user');
+        log(`Ticketsale! User ${cookie.UserName} (${userId}) got a ticketType ${renderText(ticketType.name)}, his balance is now ${user.balance}`);
+        res.redirect('../user');
     })
     return router;
 }

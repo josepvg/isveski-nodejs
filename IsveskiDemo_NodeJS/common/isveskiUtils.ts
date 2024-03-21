@@ -4,6 +4,9 @@ import {IsveskiApiKeyAuth} from "../routes/onsensor";
 import {ClientTicketDefinitionsApi} from "../clientcode/api/clientTicketDefinitionsApi";
 import Dict = NodeJS.Dict;
 import {Request} from "express";
+import {Text} from "./text";
+import {ClientDeviceInterfaceApi} from "../clientcode/api/clientDeviceInterfaceApi";
+import {PushNotificationsApi} from "../clientcode/api/pushNotificationsApi";
 
 const loggers: Array<Function> = [console.log, require('debug')('my express app')]
 const log = (message:string) => loggers.map(x => x(message))
@@ -14,38 +17,16 @@ type IsveskiRedirectCookie = {
     Language: string;
 }
     
-type TextWithTranslations = {
-    text: string
-    translations: Dict<string>
-}
-
-
-
-const getText = (text: TextWithTranslations, language: string) =>
-{
-    log(language)
-    log(JSON.stringify(text, null, 2))
-    return text.translations[language] || text.text
-}
-              
-const getDictionaryLookup = (language: string, texts: TextWithTranslations[]) => {
-    const translatedTexts = texts.reduce<Dict<string>>(
-        (dict, t) => { 
-            dict[t.text] = getText(t,language);
-            return dict;
-        }, 
-        {}
-    );
-    return (text: string) => translatedTexts[text] || text 
-}
-
 
 type IsveskiTicketType = {
     systemName: string,
-    name: TextWithTranslations
-    description: TextWithTranslations
-    noTicketDeclaration: TextWithTranslations
-    needForTicketPitch: TextWithTranslations
+    name: Text
+    description: Text
+    noTicketDialogue: {
+        noTicketDeclaration: Text
+        purchaseTicketPersuasion: Text
+        purchaseAction: Text
+    }
     image: string
     price: number
     expiryPeriodInDays: number 
@@ -61,6 +42,7 @@ const getIsveskiCookieAsString = (allCookies: string) => {
 }
 
 const parseIsveskiCookie = (cookie: string | Request) : IsveskiRedirectCookie | null => {
+    if (cookie === undefined) return {SensorId: "", UserName: "", Language: ""};
     const cookieAsString =  (typeof cookie == "string") ? cookie : cookie.headers?.cookie;
     const isveskiCookie = getIsveskiCookieAsString(cookieAsString)
     log(isveskiCookie)
@@ -74,7 +56,8 @@ const parseIsveskiCookie = (cookie: string | Request) : IsveskiRedirectCookie | 
 }
 
 
-const getIsveskiUserId = async (api: ClientWalletApi, username: string): Promise<string> => {
+const getIsveskiUserId = async (username: string, api?: ClientWalletApi): Promise<string> => {
+    api ??= getApiClientForClientWallet();
     const idGetResponse = await api.apiClientWalletSearchUserGet(username);
     if(idGetResponse.response.statusCode !== 200) {
         throw new Error(`Couldn't get info for user ${user.name} from Isveski server.`);
@@ -97,8 +80,39 @@ const getIsveskiTicketDefinitionIds = async (): Promise<Dict<string>> => {
     );
 }
 
+const getApiClientForUserDevice = () => {
+    const api = new ClientDeviceInterfaceApi("https://isveski.is");
+    api.setDefaultAuthentication(new IsveskiApiKeyAuth());
+    return api;
+}
+
+const getApiClientForTicketDefinitions = () => {
+    const api = new ClientTicketDefinitionsApi("https://isveski.is");
+    api.setDefaultAuthentication(new IsveskiApiKeyAuth());
+    return api;
+}
+
+const getApiClientForClientWallet = () => {
+    const api = new ClientWalletApi("https://isveski.is");
+    api.setDefaultAuthentication(new IsveskiApiKeyAuth());
+    return api;
+}
+
+const getApiClientForPushNotifications = () => {
+    const api = new PushNotificationsApi("https://isveski.is");
+    api.setDefaultAuthentication(new IsveskiApiKeyAuth());
+    return api;
+}
+
 export { 
-    log, getIsveskiCookieAsString, parseIsveskiCookie, getIsveskiTicketDefinitionIds, getIsveskiUserId, getText, 
-    getDictionaryLookup, 
-    IsveskiTicketType, TextWithTranslations
+    log, 
+    getIsveskiCookieAsString, 
+    parseIsveskiCookie, 
+    getIsveskiTicketDefinitionIds, 
+    getIsveskiUserId,
+    getApiClientForClientWallet,
+    getApiClientForPushNotifications,
+    getApiClientForTicketDefinitions,
+    getApiClientForUserDevice,
+    IsveskiTicketType
 }

@@ -13,7 +13,7 @@
 import { RequestFile } from './models';
 
 export enum ActionType {
-    NUMBER_1 = <any> 1,
-    NUMBER_2 = <any> 2,
-    NUMBER_3 = <any> 3
+    Created = <any> 'Created',
+    Updated = <any> 'Updated',
+    Deleted = <any> 'Deleted'
 }

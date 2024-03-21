@@ -41,6 +41,7 @@
     <Content Include="views\noaccount.pug" />
     <Content Include="views\noticket.pug" />
     <Content Include="views\user.pug" />
+    <Content Include="views\users.pug" />
     <None Include="app.ts" />
     <None Include="routes\index.ts" />
     <None Include="routes\user.ts" />
@@ -204,12 +205,10 @@
     <Folder Include="public\images\" />
     <Folder Include="public\javascripts\" />
     <Folder Include="public\stylesheets\" />
-    <Folder Include="routes\" />
     <Folder Include="servercode\" />
     <Folder Include="servercode\.openapi-generator\" />
     <Folder Include="servercode\api\" />
     <Folder Include="servercode\model\" />
-    <Folder Include="views\" />
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="clientcode\api.ts" />
@@ -293,6 +292,8 @@
   <ItemGroup>
     <Script Include="common\repository.ts" />
     <Script Include="common\isveskiUtils.ts" />
+    <Script Include="common\text.ts" />
+    <Script Include="routes\users.ts" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
   <ProjectExtensions>

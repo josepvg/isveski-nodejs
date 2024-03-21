@@ -4,6 +4,7 @@ import {
     getApiClientForClientWallet,
     getApiClientForPushNotifications,
     getApiClientForUserDevice,
+    parseIsveskiCookie,
     IsveskiTicketType,
     log
 } from '../../common/isveskiUtils';
@@ -156,6 +157,27 @@ export function makeGymCardHolderSignalEndpoint() {
         }
         
         res.sendStatus(200);
+    });
+    
+    const noticketRowingMachineTexts: Text[] = [
+        {text: "Þessi vél er eingöngu fyrir korthafa", translations: {en: "This machine is only for members"}},
+        {text: "Til að nota aflgjafaróðravélina þarftu hafa hafa kort.", translations: {en: "To use the generator rowing machine you have to have a membership card"}},
+        {text: "Kaupa kort", translations: {en: "Buy card"}},
+    ]
+        
+    router.get('/generator/noticket', (req: express.Request, res: express.Response) => {
+        const cookie = parseIsveskiCookie(req.headers?.cookie)
+        if (!cookie.UserName) {
+            res.render('invalidstate', {message: `Isveski cookie missing (${req.originalUrl})`});
+            return;
+        }
+        const lookup = Text.getLookup(noticketRowingMachineTexts, cookie.Language);
+        res.render('noticket', { 
+            title: lookup("Þessi vél er eingöngu fyrir korthafa"),
+            explanation: lookup("Til að nota aflgjafaróðravélina þarftu hafa hafa kort."),
+            buyTicketAction: lookup("Kaupa kort"),
+            getTicketEndpoint: '../getticket'
+        });
     });
     
     

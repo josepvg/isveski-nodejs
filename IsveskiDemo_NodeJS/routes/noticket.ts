@@ -26,7 +26,7 @@ function makeNoTicketEndpoint(ticketType: IsveskiTicketType) {
     // Redirect to a generic ticket sale page 
     router.get('/noticket', (req: express.Request, res: express.Response) => {
         const cookie = parseIsveskiCookie(req.headers?.cookie)
-        if (!cookie) {
+        if (!cookie.UserName) {
             res.render('invalidstate', {message: `Isveski cookie missing (${req.originalUrl})`});
             return;
         }

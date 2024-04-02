@@ -13,7 +13,7 @@
 import { RequestFile } from './models';
 
 export class BeaconResult {
-    '_continue'?: boolean;
+    '_continue': boolean;
 
     static discriminator: string | undefined = undefined;
 

@@ -5,7 +5,7 @@ import * as path from 'path';
 import { log } from './common/isveskiUtils';
 import routes from './routes/index';
 import user from './routes/user';
-import onsensor, {IsveskiApiKeyAuth} from './routes/onsensor';
+import onsensor from './routes/onsensor';
 import detailticket from './routes/detailticket';
 import detailcookie from "./routes/detailcookie";
 import linkticket from './routes/linkticket';
@@ -15,7 +15,7 @@ import cookieParser from 'cookie-parser';
 import { NextFunction, Request, Response } from 'express';
 import express = require("express");
 import makeNoTicketEndpointFor from "./routes/noticket";
-import {makeGymCardHolderSignalEndpoint, ticketType as gymcardTicketType} from "./routes/salur/gymcard";
+//import {makeGymCardHolderSignalEndpoint, ticketType as gymcardTicketType} from "./routes/salur/gymcard";
 import users from "./routes/users";
 
 const app = express();
@@ -27,7 +27,7 @@ const checkApiKey = (req: Request, res: Response, next: NextFunction) => {
     // Replace 'your_api_key_here' with your actual API key value
     console.log(req.headers);
     const apiKey = req.get('x-api-key');
-    if (apiKey && apiKey === 'SIGNALAPIKEY') {
+    if (apiKey && apiKey === 'IS-w-f3e7JnyOdJdJJzV6mYGNUx3eGePys6M') {
         next(); // API Key is correct, proceed to the next middleware or request handler
     } else {
         // API Key is incorrect or not provided, return 401 Unauthorized
@@ -47,8 +47,8 @@ app.use('/user', user);
 
     
     
-app.use('/salur', makeNoTicketEndpointFor(gymcardTicketType));
-app.use('/salur', makeGymCardHolderSignalEndpoint());
+//app.use('/salur', makeNoTicketEndpointFor(gymcardTicketType));
+//app.use('/salur', makeGymCardHolderSignalEndpoint());
 
 // [
 //     detailcookie, 

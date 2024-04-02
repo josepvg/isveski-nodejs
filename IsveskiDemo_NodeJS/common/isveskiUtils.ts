@@ -1,15 +1,23 @@
-import user from "../routes/user";
-import {ClientWalletApi} from "../clientcode/api/clientWalletApi";
-import {IsveskiApiKeyAuth} from "../routes/onsensor";
-import {ClientTicketDefinitionsApi} from "../clientcode/api/clientTicketDefinitionsApi";
+import { Request } from "express";
+import { ClientTicketDefinitionsClient } from "../clientcode/icewalletclientclient";
+import { ISVESKI_BASE_PATH } from "./constants";
+import { Text } from "./text";
+//import {ClientWalletApi} from "../clientcode/api/clientWalletApi";
+//import {IsveskiApiKeyAuth} from "../routes/onsensor";
+//import {ClientTicketDefinitionsApi} from "../clientcode/api/clientTicketDefinitionsApi";
 import Dict = NodeJS.Dict;
-import {Request} from "express";
-import {Text} from "./text";
-import {ClientDeviceInterfaceApi} from "../clientcode/api/clientDeviceInterfaceApi";
-import {PushNotificationsApi} from "../clientcode/api/pushNotificationsApi";
+//import {ClientDeviceInterfaceApi} from "../clientcode/api/clientDeviceInterfaceApi";
+//import {PushNotificationsApi} from "../clientcode/api/pushNotificationsApi";
 
 const loggers: Array<Function> = [console.log, require('debug')('my express app')]
-const log = (message:string) => loggers.map(x => x(message))
+const log = (message: string) => loggers.map(x => x(message))
+
+
+
+/* tslint:disable */
+/* eslint-disable */
+// ReSharper disable InconsistentNaming
+
 
 type IsveskiRedirectCookie = {
     SensorId: string;
@@ -31,6 +39,11 @@ type IsveskiTicketType = {
     price: number
     expiryPeriodInDays: number 
 }
+
+//export const DefaultCredentials = new Configuration({
+//    basePath: ISVESKI_BASE_PATH,
+//    apiKey: API_KEY
+//});
 
 const getIsveskiCookieAsString = (allCookies: string) => {
     const parsedCookie = allCookies.split(';')
@@ -56,31 +69,25 @@ const parseIsveskiCookie = (cookie: string | Request) : IsveskiRedirectCookie | 
 }
 
 
-const getIsveskiUserId = async (username: string, api?: ClientWalletApi): Promise<string> => {
+/*const getIsveskiUserId = async (username: string, api?: ClientWalletApi): Promise<string> => {
     api ??= getApiClientForClientWallet();
-    const idGetResponse = await api.apiClientWalletSearchUserGet(username);
-    if(idGetResponse.response.statusCode !== 200) {
-        throw new Error(`Couldn't get info for user ${user.name} from Isveski server.`);
-    }
-    return idGetResponse.body;
-}
+    const idGetResponse = await api.searchUser({ username: username });
+    return idGetResponse.userId;
+}*/
 
 const getIsveskiTicketDefinitionIds = async (): Promise<Dict<string>> => {
-    const ticketApi = new ClientTicketDefinitionsApi("https://isveski.is");
-    ticketApi.setDefaultAuthentication(new IsveskiApiKeyAuth());
-    const resp = await ticketApi.apiClientTicketDefinitionsGetListOfTicketDefinitionsGet();
-    if (resp.response.statusCode !== 200)
-        throw new Error("Ticket definition inacessible")
-    return resp.body.ticketDefinitions.reduce<Dict<string>>(
-        (dict,val) => {
+    const defApi = new ClientTicketDefinitionsClient(ISVESKI_BASE_PATH);
+    const defs = await defApi.getListOfTicketDefinitions();
+    return defs.ticketDefinitions.reduce<Dict<string>>(
+        (dict, val) => {
             dict[val.name] = val.id;
             return dict;
-        }, 
+        },
         {}
     );
 }
 
-const getApiClientForUserDevice = () => {
+/*const getApiClientForUserDevice = () => {
     const api = new ClientDeviceInterfaceApi("https://isveski.is");
     api.setDefaultAuthentication(new IsveskiApiKeyAuth());
     return api;
@@ -102,17 +109,17 @@ const getApiClientForPushNotifications = () => {
     const api = new PushNotificationsApi("https://isveski.is");
     api.setDefaultAuthentication(new IsveskiApiKeyAuth());
     return api;
-}
+}*/
 
-export { 
-    log, 
-    getIsveskiCookieAsString, 
-    parseIsveskiCookie, 
-    getIsveskiTicketDefinitionIds, 
-    getIsveskiUserId,
-    getApiClientForClientWallet,
+export {
+    log,
+    getIsveskiCookieAsString,
+    parseIsveskiCookie,
+    getIsveskiTicketDefinitionIds,
+    //getIsveskiUserId,
+    /*getApiClientForClientWallet,
     getApiClientForPushNotifications,
     getApiClientForTicketDefinitions,
-    getApiClientForUserDevice,
+    getApiClientForUserDevice,*/
     IsveskiTicketType
-}
+};

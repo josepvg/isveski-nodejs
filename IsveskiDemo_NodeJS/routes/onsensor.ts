@@ -3,24 +3,18 @@
  */
 
 import express = require('express');
-import localVarRequest from 'request';
-import { Authentication, ClientDeviceInterfaceApi, ShowMenuDto, ShowMessageDto } from '../clientcode/api';
+import { ClientDeviceInterfaceClient, IShowMenuRequest, IShowMessageRequest, ShowMenuRequest, ShowMessageRequest } from '../clientcode/icewalletclientclient';
+import { IMAGE_LOGO, ISVESKI_BASE_PATH } from '../common/constants';
+//import { ClientDeviceInterfaceApi, ShowMenuRequest, ShowMessageRequest } from '../clientcode';
 import { RequestParameter } from '../servercode/api';
 import Dict = NodeJS.Dict;
 const router = express.Router();
 
-export class IsveskiApiKeyAuth implements Authentication {
-    applyToRequest(requestOptions: localVarRequest.Options): void | Promise<void> {
-        requestOptions.headers['x-api-key'] = "IS-UPIIXxEY1Xsh1of-brTf4F3BhXThYABnK";
-    }
-}
 
 router.post('/', async (req: express.Request, res: express.Response) => {
     try {
         const requestBody: RequestParameter = req.body;
-        const clientApi = new ClientDeviceInterfaceApi("https://isveski.is");
-        clientApi.setDefaultAuthentication(new IsveskiApiKeyAuth());
-
+        const clientApi = new ClientDeviceInterfaceClient(ISVESKI_BASE_PATH);
 
         const data = requestBody.tickets[0].data;
         const dataStructure = JSON.parse(data);
@@ -28,30 +22,33 @@ router.post('/', async (req: express.Request, res: express.Response) => {
 
         const icelandicUser = requestBody.language === 'is';
 
-        const showMenuDto = new ShowMenuDto();
-        showMenuDto.communicationId = requestBody.communicationId;
-        showMenuDto.message = icelandicUser ? "Viltu borða nammi?" : "Want to eat candy?";
+        const showMenuRequest: ShowMenuRequest = new ShowMenuRequest({
+            communicationId: requestBody.communicationId,
+            message: icelandicUser ? "Viltu borða nammi?" : "Want to eat candy?",
+            options: icelandicUser ? ["Já", "Nei"] : ["Yes", "No"],
+            timeoutSek: 30,
+            title: icelandicUser ? "Nammi spurning" : "Candy question",
+            image: IMAGE_LOGO,
+        } as IShowMenuRequest);
 
-        const options = icelandicUser ? ["Já", "Nei"] : ["Yes", "No"];
-        showMenuDto.options = options;
-        showMenuDto.timeoutSek = 30;
-        showMenuDto.title = icelandicUser ? "Nammi spurning" : "Candy question";
-        showMenuDto.image = "mjolnir";
-        const reply = await clientApi.apiClientDeviceInterfaceShowMenuPost(showMenuDto);
+        const reply = await clientApi.showMenu(showMenuRequest);        
 
-        const showMessageDto = new ShowMessageDto();
-        showMessageDto.communicationId = requestBody.communicationId;
-        showMessageDto.close = icelandicUser ? "Loka" : "Close";
-        showMessageDto.image = "mjolnir";
-        showMessageDto.timeoutSek = 30;
-        showMessageDto.title = icelandicUser ? "Takk fyrir svarið" : "Thanks for your answer";
-
-        if (reply.body.selectedValue === options[0]) {
-            showMessageDto.message = icelandicUser ? "Þú valdir já" : "You picked yes";
+        let message: string = '';
+        if (reply.selectedValue === showMenuRequest.options[0]) {
+            message = icelandicUser ? "Þú valdir já" : "You picked yes";
         } else {
-            showMessageDto.message = icelandicUser ? "Þú valdir nei" : "You picked no";
+            message = icelandicUser ? "Þú valdir nei" : "You picked no";
         }
-        await clientApi.apiClientDeviceInterfaceShowMessagePost(showMessageDto);
+
+        const showMessageRequest = new  ShowMessageRequest({
+            communicationId: requestBody.communicationId,
+            close: icelandicUser ? "Loka" : "Close",
+            image: IMAGE_LOGO,
+            message: message,
+            timeoutSek: 30,
+            title: icelandicUser ? "Takk fyrir svarið" : "Thanks for your answer",
+        } as IShowMessageRequest);
+        await clientApi.showMessage(showMessageRequest);
         res.sendStatus(200);
     } catch (error) {
         console.error(error);

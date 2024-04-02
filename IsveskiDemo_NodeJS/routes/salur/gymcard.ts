@@ -1,5 +1,5 @@
 /* GET users listing. */
-import express = require('express');
+/*import express = require('express');
 import {
     getApiClientForClientWallet,
     getApiClientForPushNotifications,
@@ -182,4 +182,4 @@ export function makeGymCardHolderSignalEndpoint() {
     
     
     return router;
-}
+}*/

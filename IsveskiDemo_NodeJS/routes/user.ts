@@ -2,10 +2,10 @@
  * GET users listing.
  */
 import express = require('express');
-import {getIsveskiUserId, parseIsveskiCookie} from "../common/isveskiUtils";
+import { ClientWalletClient } from '../clientcode/icewalletclientclient';
+import { ISVESKI_BASE_PATH } from '../common/constants';
+import {parseIsveskiCookie} from "../common/isveskiUtils";
 import {Users} from "../common/repository";
-import {ClientWalletApi} from "../clientcode/api/clientWalletApi";
-import {IsveskiApiKeyAuth} from "./onsensor";
 
 const router = express.Router();
 
@@ -15,8 +15,9 @@ router.get('/', async (req: express.Request, res: express.Response) => {
         res.render('invalidstate', {message: "Cookie missing"})
     }
     else {
-        const userId = await getIsveskiUserId(cookie.UserName);
-        const user = Users.getUser(userId)
+        const api = new ClientWalletClient(ISVESKI_BASE_PATH);
+        const userResponse = await api.searchUser(cookie.UserName);
+        const user = Users.getUser(userResponse.userId)
         if(user !== undefined){
             user.name = cookie.UserName;
             res.render('user', { 

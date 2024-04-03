@@ -3,61 +3,61 @@
  */
 
 import express = require('express');
-import { ClientDeviceInterfaceClient, IShowMenuRequest, IShowMessageRequest, ShowMenuRequest, ShowMessageRequest } from '../clientcode/icewalletclientclient';
+//import { ClientDeviceInterfaceClient, IShowMenuRequest, IShowMessageRequest, ShowMenuRequest, ShowMessageRequest } from '../clientcode/icewalletclientclient';
 import { API_KEY, IMAGE_LOGO, ISVESKI_BASE_PATH } from '../common/constants';
 import localVarRequest from 'request';
 
 //import { ClientDeviceInterfaceApi, ShowMenuRequest, ShowMessageRequest } from '../clientcode';
 import { RequestParameter } from '../servercode/api';
 import Dict = NodeJS.Dict;
-import { Authentication } from '../clientcode3/api';
+//import { Authentication } from '../clientcode3/api';
 const router = express.Router();
 
-export class IsveskiApiKeyAuth implements Authentication {
-    applyToRequest(requestOptions: localVarRequest.Options): void | Promise<void> {
-        requestOptions.headers['x-api-key'] = API_KEY;
-    }
-}
+//export class IsveskiApiKeyAuth implements Authentication {
+//    applyToRequest(requestOptions: localVarRequest.Options): void | Promise<void> {
+//        requestOptions.headers['x-api-key'] = API_KEY;
+//    }
+//}
 
 
 router.post('/', async (req: express.Request, res: express.Response) => {
     try {
-        const requestBody: RequestParameter = req.body;
-        const clientApi = new ClientDeviceInterfaceClient(ISVESKI_BASE_PATH);
+        //const requestBody: RequestParameter = req.body;
+        //const clientApi = new ClientDeviceInterfaceClient(ISVESKI_BASE_PATH);
 
-        const data = requestBody.tickets[0].data;
-        const dataStructure = JSON.parse(data);
-        const userId = dataStructure.userId;
+        //const data = requestBody.tickets[0].data;
+        //const dataStructure = JSON.parse(data);
+        //const userId = dataStructure.userId;
 
-        const icelandicUser = requestBody.language === 'is';
+        //const icelandicUser = requestBody.language === 'is';
 
-        const showMenuRequest: ShowMenuRequest = new ShowMenuRequest({
-            communicationId: requestBody.communicationId,
-            message: icelandicUser ? "Viltu borða nammi?" : "Want to eat candy?",
-            options: icelandicUser ? ["Já", "Nei"] : ["Yes", "No"],
-            timeoutSek: 30,
-            title: icelandicUser ? "Nammi spurning" : "Candy question",
-            image: IMAGE_LOGO,
-        } as IShowMenuRequest);
+        //const showMenuRequest: ShowMenuRequest = new ShowMenuRequest({
+        //    communicationId: requestBody.communicationId,
+        //    message: icelandicUser ? "Viltu borða nammi?" : "Want to eat candy?",
+        //    options: icelandicUser ? ["Já", "Nei"] : ["Yes", "No"],
+        //    timeoutSek: 30,
+        //    title: icelandicUser ? "Nammi spurning" : "Candy question",
+        //    image: IMAGE_LOGO,
+        //} as IShowMenuRequest);
 
-        const reply = await clientApi.showMenu(showMenuRequest);        
+        //const reply = await clientApi.showMenu(showMenuRequest);        
 
-        let message: string = '';
-        if (reply.selectedValue === showMenuRequest.options[0]) {
-            message = icelandicUser ? "Þú valdir já" : "You picked yes";
-        } else {
-            message = icelandicUser ? "Þú valdir nei" : "You picked no";
-        }
+        //let message: string = '';
+        //if (reply.selectedValue === showMenuRequest.options[0]) {
+        //    message = icelandicUser ? "Þú valdir já" : "You picked yes";
+        //} else {
+        //    message = icelandicUser ? "Þú valdir nei" : "You picked no";
+        //}
 
-        const showMessageRequest = new  ShowMessageRequest({
-            communicationId: requestBody.communicationId,
-            close: icelandicUser ? "Loka" : "Close",
-            image: IMAGE_LOGO,
-            message: message,
-            timeoutSek: 30,
-            title: icelandicUser ? "Takk fyrir svarið" : "Thanks for your answer",
-        } as IShowMessageRequest);
-        await clientApi.showMessage(showMessageRequest);
+        //const showMessageRequest = new  ShowMessageRequest({
+        //    communicationId: requestBody.communicationId,
+        //    close: icelandicUser ? "Loka" : "Close",
+        //    image: IMAGE_LOGO,
+        //    message: message,
+        //    timeoutSek: 30,
+        //    title: icelandicUser ? "Takk fyrir svarið" : "Thanks for your answer",
+        //} as IShowMessageRequest);
+        //await clientApi.showMessage(showMessageRequest);
         res.sendStatus(200);
     } catch (error) {
         console.error(error);

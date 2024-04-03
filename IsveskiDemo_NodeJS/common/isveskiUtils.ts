@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { ClientTicketDefinitionsClient } from "../clientcode/icewalletclientclient";
+//import { ClientTicketDefinitionsClient } from "../clientcode/icewalletclientclient";
 import { ISVESKI_BASE_PATH } from "./constants";
 import { Text } from "./text";
 //import {ClientWalletApi} from "../clientcode/api/clientWalletApi";
@@ -76,15 +76,16 @@ const parseIsveskiCookie = (cookie: string | Request) : IsveskiRedirectCookie | 
 }*/
 
 const getIsveskiTicketDefinitionIds = async (): Promise<Dict<string>> => {
-    const defApi = new ClientTicketDefinitionsClient(ISVESKI_BASE_PATH);
-    const defs = await defApi.getListOfTicketDefinitions();
-    return defs.ticketDefinitions.reduce<Dict<string>>(
-        (dict, val) => {
-            dict[val.name] = val.id;
-            return dict;
-        },
-        {}
-    );
+    return null;
+    //const defApi = new ClientTicketDefinitionsClient(ISVESKI_BASE_PATH);
+    //const defs = await defApi.getListOfTicketDefinitions();
+    //return defs.ticketDefinitions.reduce<Dict<string>>(
+    //    (dict, val) => {
+    //        dict[val.name] = val.id;
+    //        return dict;
+    //    },
+    //    {}
+    //);
 }
 
 /*const getApiClientForUserDevice = () => {

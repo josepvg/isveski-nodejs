@@ -15,10 +15,13 @@
   },
   "main": "app.js",
   "dependencies": {
+    "@types/node-fetch": "^2.6.11",
     "cookie-parser": "^1.4.6",
+    "cross-fetch": "^4.0.0",
     "debug": "^2.6.9",
     "express": "^4.14.0",
     "http": "^0.0.1-security",
+    "isomorphic-fetch": "^3.0.0",
     "node-fetch": "^3.3.2",
     "pug": "^2.0.0-rc.3",
     "request": "^2.88.2"

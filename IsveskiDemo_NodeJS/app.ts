@@ -2,6 +2,7 @@
 import { AddressInfo } from "net";
 import * as path from 'path';
 
+import 'isomorphic-fetch';
 import { log } from './common/isveskiUtils';
 import routes from './routes/index';
 import user from './routes/user';
@@ -18,6 +19,13 @@ import makeNoTicketEndpointFor from "./routes/noticket";
 //import {makeGymCardHolderSignalEndpoint, ticketType as gymcardTicketType} from "./routes/salur/gymcard";
 import users from "./routes/users";
 import { SIGNAL_KEY } from "./common/constants";
+
+import fetch from "node-fetch";
+//global.fetch = fetch;
+
+//ER AÐ NOTA https://github.com/swagger-api/swagger-codegen?tab=readme-ov-file#generating-libraries-from-your-server
+//frekar en openapi-generator-cli þar sem mér sýnist það vera betra.
+// er í vandræðum með fetch þar sem það er ekki til í node-fetch
 
 console.log("stuff");
 

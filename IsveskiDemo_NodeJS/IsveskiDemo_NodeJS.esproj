@@ -8,6 +8,5 @@
   </PropertyGroup>
   <ItemGroup>
     <Folder Include=".vscode\" />
-    <Folder Include="clientcode3\" />
   </ItemGroup>
 </Project>

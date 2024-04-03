@@ -4,11 +4,20 @@
 
 import express = require('express');
 import { ClientDeviceInterfaceClient, IShowMenuRequest, IShowMessageRequest, ShowMenuRequest, ShowMessageRequest } from '../clientcode/icewalletclientclient';
-import { IMAGE_LOGO, ISVESKI_BASE_PATH } from '../common/constants';
+import { API_KEY, IMAGE_LOGO, ISVESKI_BASE_PATH } from '../common/constants';
+import localVarRequest from 'request';
+
 //import { ClientDeviceInterfaceApi, ShowMenuRequest, ShowMessageRequest } from '../clientcode';
 import { RequestParameter } from '../servercode/api';
 import Dict = NodeJS.Dict;
+import { Authentication } from '../clientcode3/api';
 const router = express.Router();
+
+export class IsveskiApiKeyAuth implements Authentication {
+    applyToRequest(requestOptions: localVarRequest.Options): void | Promise<void> {
+        requestOptions.headers['x-api-key'] = API_KEY;
+    }
+}
 
 
 router.post('/', async (req: express.Request, res: express.Response) => {

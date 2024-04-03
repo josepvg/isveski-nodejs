@@ -17,6 +17,9 @@ import express = require("express");
 import makeNoTicketEndpointFor from "./routes/noticket";
 //import {makeGymCardHolderSignalEndpoint, ticketType as gymcardTicketType} from "./routes/salur/gymcard";
 import users from "./routes/users";
+import { SIGNAL_KEY } from "./common/constants";
+
+console.log("stuff");
 
 const app = express();
 app.use(express.json());
@@ -27,13 +30,12 @@ const checkApiKey = (req: Request, res: Response, next: NextFunction) => {
     // Replace 'your_api_key_here' with your actual API key value
     console.log(req.headers);
     const apiKey = req.get('x-api-key');
-    if (apiKey && apiKey === 'IS-w-f3e7JnyOdJdJJzV6mYGNUx3eGePys6M') {
+    if (apiKey && apiKey === SIGNAL_KEY) {
         next(); // API Key is correct, proceed to the next middleware or request handler
     } else {
         // API Key is incorrect or not provided, return 401 Unauthorized
         res.status(401).json({ error: 'Unauthorized: Invalid API key' });
     }
-
 };
 
 // view engine setup

@@ -15,9 +15,8 @@
   },
   "main": "app.js",
   "dependencies": {
-    "@types/node-fetch": "^2.6.11",
     "cookie-parser": "^1.4.6",
-    "debug": "^2.2.0",
+    "debug": "^2.6.9",
     "express": "^4.14.0",
     "http": "^0.0.1-security",
     "node-fetch": "^3.3.2",
